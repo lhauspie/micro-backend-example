@@ -1,0 +1,12 @@
+{
+  "name": "module-consumer",
+  "version": "1.0.0",
+  "main": "consumer.js",
+  "scripts": {
+    "start": "node consumer.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1"
+  }
+}
