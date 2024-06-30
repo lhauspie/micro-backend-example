@@ -103,8 +103,7 @@ Bien entendu, il existe d'autres obstacles comme :
 - La techno que je veux utiliser fait-elle partie du TechRadar de l'entreprise ?
 - L'entreprise a-t-elle les compétences pour maintenir ces composants après mon départ ?
 - Cette solution s'inscrit-elle correctement dans les coutumes et les contraintes de l'entreprise (ex : Utilisation d'un API Gateway car oui, on peut considérer cette solution comme une API) ?
-- Comment s'assurer de ne pas casser le contrat d'interface par erreur (ex : Ajouter un champ sans trop faire attention) ? J'ai bien une idée pour celle-là.
-
+- Comment s'assurer de ne pas casser le contrat d'interface par erreur (ex : Ajouter un champ sans trop faire attention) ? J'ai bien une idée pour celle-là : décliner le concept de "Contract Testing" pour garantir qu'on n'a pas cassé le contrat d'interface.
 
 
 # How
@@ -116,27 +115,28 @@ Lorsqu'un consommateur intègre mon service, il le fait une fois et n'a plus à 
 Ce serait la librairie intégrée par le consommateur qui tirerait la logique métier distante pour ensuite l'exécuter.
 En d'autres termes, la librairie n'est finalement que de la tuyauterie qui permet de faire transiter la logique métier et l'exécuter.
 
-Pour schématiser : Consumer --> Business Logic Client Library --> Business Logic Provider
+Pour schématiser : _Consumer_ --> _Business Logic Client Library_ --> _Business Logic Provider_
 
 Les exigences sont donc les suivantes :
-- Le Service doit être indépendant de la Librairie en termes de cycle de vie, de version, et de technologie
-- Le Service doit être le plus flexible possible (Changement de contrat d'interface, etc.)
-- Le Service doit être cacheable en utilisant les standards HTTP
-- La Librairie dit être facilement intégrable peu importe la techno (Maven, Gradle, NPM, pip, go get, etc.)
-- Je dois pouvoir porter la librairie dans n'importe quelle technologie sans qu'il soit nécessaire de changer quoi que ce soit au Service ou au Service Provider
-- Ce doit être plus performant qu'une API Rest
-- Le Consumer pourra définir une durée de cache localement
-- L'intégration et la configuration de la Librairie doit être le plus simple possible (grossièrement, une url et une durée de validité du cache)
+- Le _Business Logic Provider_ doit pouvoir être indépendant de la _Business Logic Client Library_ en termes de cycle de vie, de version, et de technologie
+- Le _Business Logic Provider_ doit être le plus flexible possible (Changement de contrat d'interface, etc.)
+- La _Business Logic_ fournis par le _Business Logic Provider_ doit être cacheable en utilisant les standards HTTP
+- La _Business Logic Client Library_ doit être facilement intégrable peu importe la techno (Maven, Gradle, NPM, pip, go get, etc.)
+- Je dois pouvoir porter la _Business Logic Client Library_ dans n'importe quelle technologie sans qu'il soit nécessaire de changer quoi que ce soit au _Business Logic Provider_ ou à la facon dont est implémenté la _Business Logic_
+- Ce doit être plus performant qu'une API Rest, ou a minima d'une performance equivalente.
+- Le _Consumer_ pourra définir une durée de cache localement
+- L'intégration et la configuration de la _Business Logic Client Library_ doit être le plus simple possible (grossièrement, une url et une durée de validité du cache)
 
 
-Une première limite évidente : Il faut que les technos pour lesquelles je fournis la Libraire supporte l'exécution de la techno du Business Logic Provider.
-En effet, si je fournis une librairie en Go, il faut que le Consumer soit capable d'exécuter du Go.
-Il faudra donc choisir la technologie du Business Logic Provider en fonction des capacités de la Technologie du Business Logic Client Library et donc du Consumer.
-Ou autrement dit, il faudra que la Business Logic soit exécutable dans la techno du Consumer.
+Une première limite évidente : Il faut que les technos pour lesquelles je fournis la _Business Logic Client Library_ supporte l'exécution de la techno de la _Business Logic_.
+En effet, si je fournis une _Business Logic_ en Go, il faut que le _Consumer_ soit capable d'exécuter du Go.
+Il faudra donc choisir la technologie de la _Business Logic_ en fonction des capacités de la technologie du _Business Logic Client Library_ et donc du _Consumer_.
+Ou autrement dit, il faudra que la _Business Logic_ soit exécutable dans la techno du _Consumer_.
 
 
 ## Service en JavaScript
-[Un cas simple : une somme](./simple-js/README.md)
+- [Un cas simple : une somme](./simple-js/README.md) (Ou une multiplication, c'est vous qui voyez)
+- [Un cas complexe : une calculette de materiel pour clôture](.complexe-js/README.md) (Basé sur un vrai cas d'usage : https://www.leroymerlin.fr/outils-projet/calculer-quantite-de-grillage-pour-votre-cloture.html)
 
 TO BE CONTINUE...
 

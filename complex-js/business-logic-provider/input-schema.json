@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FenceMaterials",
+  "type": "object",
+  "properties": {
+    "fence": {
+      "type": "object",
+      "properties": {
+        "fence_length": {
+          "type": "number",
+          "description": "The length of the fence in meters."
+        },
+        "nb_segments": {
+          "type": "integer",
+          "description": "The number of segments in the fence."
+        },
+        "nb_segments_greater_than_roll_length": {
+          "type": "integer",
+          "description": "The number of segments greater than the roll length."
+        }
+      },
+      "required": ["fence_length", "nb_segments", "nb_segments_greater_than_roll_length"]
+    },
+    "materials": {
+      "type": "object",
+      "properties": {
+        "wire_mesh_roll_length": {
+          "type": "number",
+          "description": "The length of the wire mesh roll in meters."
+        },
+        "wire_mesh_roll_height": {
+          "type": "number",
+          "description": "The height of the wire mesh roll in meters."
+        },
+        "tension_wire_roll_length": {
+          "type": "number",
+          "description": "The length of the tension wire roll in meters."
+        }
+      },
+      "required": ["wire_mesh_roll_length", "wire_mesh_roll_height", "tension_wire_roll_length"]
+    }
+  },
+  "required": ["fence", "materials"]
+}

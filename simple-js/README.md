@@ -1,8 +1,8 @@
 # Module Provider en Vanilla JS
 ```bash
 cd ./business-logic-provider
-docker build . -t js-business-logic-provider
-docker run --rm -it -p 8080:80 --name js-business-logic-provider js-business-logic-provider
+docker build . -t simple-js-business-logic-provider
+docker run --rm -it -p 8080:80 --name simple-js-business-logic-provider simple-js-business-logic-provider
 ```
 
 # How to consume in Javascript
@@ -33,7 +33,7 @@ Should return `{result: 31}`
 ### ➕➕ Resiliency
 You can now shut down the Module Provider:
 ```bash
-docker stop js-business-logic-provider
+docker stop simple-js-business-logic-provider
 ```
 and continue to request the Module Consumer API
 ```bash
@@ -50,8 +50,8 @@ Let say you choose to multiply instead of sum.
 Make your change and then run again the Module Provider:
 ```bash
 cd ./business-logic-provider
-docker build . -t js-business-logic-provider
-docker run --rm -it -p 8080:80 --name js-business-logic-provider js-business-logic-provider
+docker build . -t simple-js-business-logic-provider
+docker run --rm -it -p 8080:80 --name simple-js-business-logic-provider simple-js-business-logic-provider
 ```
 
 If the cacheDuration is overdue, next cUrl commands:
