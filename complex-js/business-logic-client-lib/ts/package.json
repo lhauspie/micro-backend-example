@@ -1,5 +1,5 @@
 {
-  "name": "ts-business-logic-client-lib",
+  "name": "js-ts-business-logic-client-lib",
   "version": "1.0.0",
   "description": "This is a client library that will download the business logic from the business-loci-provider and execute it.",
   "main": "dist/client-lib.js",

@@ -138,8 +138,6 @@ Ou autrement dit, il faudra que la _Business Logic_ soit exécutable dans la tec
 - [Un cas simple : une somme](./simple-js/README.md) (Ou une multiplication, c'est vous qui voyez)
 - [Un cas complexe : une calculette de materiel pour clôture](.complexe-js/README.md) (Basé sur un vrai cas d'usage : https://www.leroymerlin.fr/outils-projet/calculer-quantite-de-grillage-pour-votre-cloture.html)
 
-TO BE CONTINUE...
-
 ## Possible avec Python
 
 TO BE CONTINUE...
@@ -163,3 +161,33 @@ Il n'est donc pas possible qu'un service WASM puisse accéder à la base de donn
 
 TO BE CONTINUE...
 
+
+# Les Problèmes et Contraintes
+
+## Communiquer les schemas de données au Consumer
+
+Si on veut être hautement flexible dans les inputs autorisés (l'objectif étant que le Consumer puisse envoyer un Payload avec plus d'information que nécessaire, sans casser le contrat d'interface), il faut utiliser un format d'échange hautement flexible. Les langages fortement typés, comme Java, ne sont donc pas les bons candidats.
+JavaScript semble être un très bon candidat.
+Et en JavaScript, il existe un format d'échange tout trouvé pour répondre à ce besoin : le JSON.
+
+Mais le JSON est tellement flexible qu'il devient difficile de guider le Consumer pour qu'il envoie les bonnes données dans le bon format.
+Il faut donc trouver un moyen de le guider et de lui permettre de coder facilement les objets qui seront échangés entre le Consumer et la Business Logic.
+
+Ma première piste est donc de fournir un schéma de données JSON (JSON Schema) pour les inputs et les outputs de la Business Logic via des endpoints dédiés.
+Ainsi, lorsque le Consumer voudra coder ses objets, il pourra télécharger le JSON schema et faire une génération automatique de code compatible avec ces JSON Schemas (cf. https://www.jsonschema2pojo.org/).
+Ces JSON Schemas doivent donc être le plus complet possible et le plus stable possible.
+
+On pourrait tenter d'intégrer, à la tuyauterie, une gestion des changements de ces schemas pour afficher des logs de Warning pour prévenir le Consumer que quelque chose a changé dans le contrat d'interface.
+
+
+## Faire en sorte que nous soyons informés de dysfonctionnement
+
+Un souci, plutôt génant celui-ci, c'est d'être en mesure de monitorer la Business Logic.
+Que devrait-il se passer si la Business Logic dysfonctionnait ?
+Faudrait-il que je sois informé de manière automatique ?
+Faudrait-il qu'on affiche simplement des logs d'erreurs et attendre que le problème nous soit remonté par le Consumer ?
+
+Une chose est sur, il faut trouver quelque chose, sinon on sera complètement à l'aveugle.
+
+
+##
