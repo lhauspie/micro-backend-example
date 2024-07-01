@@ -1,0 +1,22 @@
+{
+  "name": "ts-business-logic-client-lib",
+  "version": "1.0.0",
+  "description": "This is a client library that will download the business logic from the business-loci-provider and execute it.",
+  "main": "dist/client-lib.js",
+  "types": "dist/client-lib.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Logan HAUSPIE",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.2"
+  }
+}

@@ -3,7 +3,7 @@
 Ce repo fournit un DevContainer qui permet de contribuer très rapidement.
 Donc, il suffit de lancer le DevContainer et on est prêt à contribuer.
 
-Prenez donc le temps de lire les `README.md` de chaque module pour savoir comment l'utiliser.
+Prenez donc le temps de lire les `README.md` de chaque sous-dossier pour savoir comment l'utiliser.
 
 # Why
 

@@ -1,4 +1,4 @@
-# Module Provider en Vanilla JS
+# Business Logic Provider en Vanilla JS
 ```bash
 cd ./business-logic-provider
 docker build . -t complex-js-business-logic-provider
@@ -22,26 +22,26 @@ curl http://localhost:8080/output-schema.json
 
 # How to consume in Javascript
 
-## Module Client Librairies in Vanilla JS
+## Business Logic Client Librairies in Vanilla JS
 ```bash
 cd ./business-logic-client-lib/js
 npm install
 ```
 
-## Module Consumer in Vanilla JS
+## Consumer in Vanilla JS
 ```bash
-cd ./consumers/nodejs
+cd ./consumer/js
 npm install
 npm start
 ```
 
-Then you can query the API with:
+Une requête à l'API du Consumer :
 ```bash
 curl --location 'http://localhost:3000/execute' \
 -H 'Content-Type: application/json' \
 --data '{"a": 11, "b": 20}' | jq
 ```
-Should return 
+Devrait retourner : 
 ```
 {
   "result": {
@@ -62,14 +62,14 @@ Should return
 }
 ```
 
-So if you add these missing fields:
+Donc si on ajoute les champs manquants :
 ```bash
 curl --location 'http://localhost:3000/execute' \
 -H 'Content-Type: application/json' \
 --data '{"fence": 1, "materials": 2}' | jq
 ```
 
-, you should get:
+On devrait avoir la réponse :
 ```
 {
   "result": {
@@ -119,7 +119,7 @@ curl --location 'http://localhost:3000/execute' \
 }
 ```
 
-So now you can query the Rest API of the consumer with the full payload:
+Il est maintenant possible de requêter l'API REST du Consumer avec le payload complet.
 ```bash
 curl --location 'http://localhost:3000/execute' \
 -H 'Content-Type: application/json' \
@@ -137,7 +137,7 @@ curl --location 'http://localhost:3000/execute' \
 }' | jq
 ```
 
-You should get:
+La réponse devrait être :
 ```
 {
   "result": {
@@ -163,21 +163,20 @@ TO BE CONTINUED...
 ## End then
 
 ### ➕➕ Resiliency
-Like in the simple-js example, you can now shut down the Module Provider:
+Comme pour l'exemple `simple-js`, vous pouvez maintenant arrêter le Business Logic Provider:
 ```bash
 docker stop complex-js-business-logic-provider
 ```
-and continue to request the Module Consumer API
+et continuer de requêter l'API du Consumer:
 ```bash
 curl --location 'http://localhost:3000/execute' \
 -H 'Content-Type: application/json' \
 --data '{"a": 11, "b": 20}'
 ```
-It will still return same result even if the Business Logic Provider is down.
+Le Consumer peut continuer à fonctionner même si le Business Logic Provider est en panne.
 
 ### ➕➕ Auto Update
-Like in the simple-js example, you can now update the Business Logic Provider to change the inner business logic and continue to request the Consumer's REST API.
-
+Vous pouvez maintenant mettre à jour le Business Logic Provider pour changer la logique métier interne et continuer à interroger l'API REST du Consumer.
 
 ### ➖➖ Drawbacks
 - Il faut implémenter toutes les vérifications de format et de présence. Cela peut simplement venir du fait que je n'utilise aucune lib. Peut-être que j'aurais pu utiliser un outil de validation de Schema de données par exemple avant de commencer les calculs (ex: [Joi](https://joi.dev/api/)).
@@ -186,3 +185,22 @@ Like in the simple-js example, you can now update the Business Logic Provider to
     - un champ `result` dans la réponse pour y ranger le résultat
     - un champ `warnings` dans la réponse pour permettre au Consumer de savoir s'il y a un risque particulier (ex: Changement de version)
     - un champ `errors` dans la réponse pour permettre au Consumer de savoir s'il y a des erreurs
+
+
+
+# How to consume in TypeScript
+
+## Business Logic Client Library in TypeScript
+```bash
+cd ./business-logic-client-lib/ts
+npm install
+npm run build
+```
+
+## Consumer in TypeScript
+```bash
+cd ./consumer/ts
+npm install
+npm run build
+npm start
+```
