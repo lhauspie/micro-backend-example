@@ -1,0 +1,15 @@
+{
+  "name": "js-js-business-logic-client-lib",
+  "version": "1.0.0",
+  "description": "This is a client library that will download the business logic from the business-loci-provider and execute it.",
+  "main": "client-lib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Logan HAUSPIE",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}

@@ -23,6 +23,8 @@ public class ClientLibrary {
   private LocalDateTime cacheLocalDateTime = LocalDateTime.MIN;
   private String businessLogicScript = null;
   private String lastModified = null;
+  private Context context = null;
+  private Value executeFunction = null;
 
   private final OkHttpClient client = new OkHttpClient();
 
@@ -39,7 +41,7 @@ public class ClientLibrary {
 
   public BusinessLogicResponse executeBusinessLogic(Object input) {
     try {
-      return toObject(executeBusinessLogic(toMap(input)), BusinessLogicResponse.class);
+      return toObject(executeBusinessLogic(toJsonString(input)), BusinessLogicResponse.class);
     } catch (Exception e) {
       e.printStackTrace();
       return BusinessLogicResponse.error(
@@ -90,37 +92,40 @@ public class ClientLibrary {
     if (response != null) {
       this.businessLogicScript = response.body().string();
       this.lastModified = response.header("Last-Modified");
+      this.cacheLocalDateTime = LocalDateTime.now();
+      this.resetContext();
     }
-    this.cacheLocalDateTime = LocalDateTime.now();
   }
 
   private void cache() {
     this.cacheLocalDateTime = LocalDateTime.now();
+    // Pas besoin de resetContext car le script n'a pas changé
   }
 
-  private Map<String, Object> executeBusinessLogic(Map<String, Object> input) throws Exception {
-      String script = this.fetchBusinessLogic();
-      if (script != null) {
-        try (Context context = Context.create()) {
-          // Define module and exports
-          context.eval("js", "var exports = {}; var module = { exports: exports }; " + script);
-
-          // Get the module.exports object
-          Value moduleExports = context.eval("js", "module.exports");
-          // Get the execute function from module.exports
-          Value executeFunction = moduleExports.getMember("execute");
-
-          // Execute the function with the input
-          Value result = executeFunction.execute(input);
-
-          // Convert the result to a Map
-          return convertToMap(result);
-        }
-      } else {
-        throw new Exception("Failed to load business logic script");
-      }
+  private void resetContext() {
+    if (this.context != null) {
+      this.context.close();
+    }
+    this.context = Context.create();
+    if (this.businessLogicScript != null) {
+      this.context.eval("js", "var exports = {}; var module = { exports: exports }; " + this.businessLogicScript);
+      Value moduleExports = this.context.eval("js", "module.exports");
+      this.executeFunction = moduleExports.getMember("execute");
+    } else {
+      this.executeFunction = null;
+    }
   }
 
+  private Map<String, Object> executeBusinessLogic(String jsonInput) throws Exception {
+      this.fetchBusinessLogic(); // Lève une exception si le script n'est pas disponible
+      Value parsedInput = parseInputForJavascriptContext(jsonInput);
+      Value result = this.executeFunction.execute(parsedInput);
+      return convertToMap(result);
+  }
+
+  private Value parseInputForJavascriptContext(String jsonInput) {
+    return this.context.eval("js", "JSON.parse('" + jsonInput.replace("'", "\\'") + "')");
+  }
 
   private Map<String, Object> convertToMap(Value value) {
     Map<String, Object> resultMap = new HashMap<>();
@@ -151,9 +156,8 @@ public class ClientLibrary {
   }
 
 
-  private Map<String, Object> toMap(Object input) throws JsonProcessingException {
-    String jsonString = objectMapper.writeValueAsString(input);
-    return objectMapper.readValue(jsonString, Map.class);
+  private String toJsonString(Object input) throws JsonProcessingException {
+    return objectMapper.writeValueAsString(input);
   }
 
   private <T> T toObject(Map<String, Object> input, Class<T> valueType) throws JsonProcessingException {

@@ -267,4 +267,65 @@ public class ClientLibraryTest {
     Assertions.assertThat(businessLogicResponse.errors()).isNull();
     Assertions.assertThat(businessLogicResponse.warnings()).isNull();
   }
+
+  @Test
+  void getBackInputParametersAsWarningsToCheckInputIsCorrectlyInterpreted() {
+    // Given
+    wiremockServer.stubFor(
+        get(urlEqualTo("/business-logic.js"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/javascript")
+                .withHeader("Last-Modified", "Wed, 21 Oct 2015 07:28:00 GMT")
+                .withBody("""
+                    function execute(input) {
+                        return {
+                            result: {},
+                            errors: [],
+                            warnings: [
+                                {code: "INPUT_PARAMETER",                                            message: JSON.stringify(input)},
+                                {code: "INPUT_PARAMETER.fence",                                      message: JSON.stringify(input.fence)},
+                                {code: "INPUT_PARAMETER.fence.fence_length",                         message: "" + input.fence.fence_length},
+                                {code: "INPUT_PARAMETER.fence.nb_segments",                          message: "" + input.fence.nb_segments},
+                                {code: "INPUT_PARAMETER.fence.nb_segments_greater_than_roll_length", message: "" + input.fence.nb_segments_greater_than_roll_length},
+                                {code: "INPUT_PARAMETER.fence.another_field",                        message: "" + input.fence.another_field},
+                                {code: "INPUT_PARAMETER.materials",                                  message: JSON.stringify(input.materials)},
+                                {code: "INPUT_PARAMETER.materials.wire_mesh_roll_length",            message: "" + input.materials.wire_mesh_roll_length},
+                                {code: "INPUT_PARAMETER.materials.wire_mesh_roll_height",            message: "" + input.materials.wire_mesh_roll_height},
+                                {code: "INPUT_PARAMETER.materials.tension_wire_roll_length",         message: "" + input.materials.tension_wire_roll_length},
+                            ]
+                        };
+                    }
+                    
+                    module.exports = {execute};
+                    """)
+            )
+    );
+
+    ClientLibrary clientLibrary = new ClientLibrary(wiremockServer.baseUrl(), Duration.ofMinutes(1));
+
+    // When
+    var input = new InputExample(
+        new InputExample.Fence(10, 4, 2, 1.5f),
+        new InputExample.Materials(50, 2.5f, 100)
+    );
+    var businessLogicResponse = clientLibrary.executeBusinessLogic(input);
+
+    // Then
+    Assertions.assertThat(businessLogicResponse).isNotNull();
+    Assertions.assertThat(businessLogicResponse.result()).isNotNull();
+    Assertions.assertThat(businessLogicResponse.errors()).isNotNull().isEmpty();
+    Assertions.assertThat(businessLogicResponse.warnings()).isNotNull().hasSize(10).contains(
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER", "{\"fence\":{\"fence_length\":10,\"nb_segments\":4,\"nb_segments_greater_than_roll_length\":2,\"another_field\":1.5},\"materials\":{\"wire_mesh_roll_length\":50,\"wire_mesh_roll_height\":2.5,\"tension_wire_roll_length\":100}}"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.fence", "{\"fence_length\":10,\"nb_segments\":4,\"nb_segments_greater_than_roll_length\":2,\"another_field\":1.5}"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.fence.fence_length", "10"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.fence.nb_segments", "4"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.fence.nb_segments_greater_than_roll_length", "2"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.fence.another_field", "1.5"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.materials", "{\"wire_mesh_roll_length\":50,\"wire_mesh_roll_height\":2.5,\"tension_wire_roll_length\":100}"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.materials.wire_mesh_roll_length", "50"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.materials.wire_mesh_roll_height", "2.5"),
+        new BusinessLogicResponse.Warning("INPUT_PARAMETER.materials.tension_wire_roll_length", "100")
+    );
+  }
 }

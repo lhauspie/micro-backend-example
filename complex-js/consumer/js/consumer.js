@@ -1,5 +1,5 @@
 const express = require('express');
-const ClientLibrary = require('../../business-logic-client-lib/js/client-lib');
+const ClientLibrary = require('../../business-logic-client-lib/js/js-js-business-logic-client-lib/client-lib');
 
 const app = express();
 const port = 3000;

@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import ClientLibrary from '../../../../business-logic-client-lib/ts/dist/client-lib';
+import ClientLibrary from '../../../../business-logic-client-lib/ts/js-ts-business-logic-client-lib/dist/client-lib';
 
 const router = express.Router();
 

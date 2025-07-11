@@ -1,24 +1,6 @@
+
 # Business Logic Provider in Vanilla JS
-```bash
-cd ./business-logic-provider
-docker build . -t complex-js-business-logic-provider
-docker run --rm -it -p 8080:80 --name complex-js-business-logic-provider complex-js-business-logic-provider
-```
-
-## Business Logic
-```bash
-curl http://localhost:8080/business-logic.js
-```
-
-## Input JSON Schema
-```bash
-curl http://localhost:8080/input-schema.json
-```
-
-## Output JSON Schema
-```bash
-curl http://localhost:8080/output-schema.json
-```
+[README](business-logic-provider/README.md)
 
 # How to consume in Javascript
 
@@ -160,7 +142,7 @@ La réponse devrait être :
 ### ➕➕ Resiliency
 Comme pour l'exemple `simple-js`, vous pouvez maintenant arrêter le Business Logic Provider:
 ```bash
-docker stop complex-js-business-logic-provider
+podman stop complex-js-business-logic-provider
 ```
 et continuer de requêter l'API du Consumer:
 ```bash
@@ -197,7 +179,6 @@ Ces JSON Schemas doivent donc être le plus complet possible et le plus stable p
 On pourrait tenter d'intégrer, à la tuyauterie, une gestion des changements de ces schemas pour afficher des logs de Warning pour prévenir le Consumer que quelque chose a changé dans le contrat d'interface.
 
 ### ➖➖ Faire en sorte que nous soyons informés de dysfonctionnement
-
 
 # How to consume in TypeScript
 

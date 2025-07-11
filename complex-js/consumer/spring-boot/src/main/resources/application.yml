@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: spring.consumer.js
+server:
+  port: 3000
+
+business:
+  logic:
+    provider:
+      url: "http://localhost:8080"
+      cache-ttl: 5m

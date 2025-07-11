@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const client_lib_1 = __importDefault(require("../../../../business-logic-client-lib/ts/dist/client-lib"));
+const client_lib_1 = __importDefault(require("../../../../business-logic-client-lib/ts/js-ts-business-logic-client-lib/dist/client-lib"));
 const router = express_1.default.Router();
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const objectToExecute = req.body;
