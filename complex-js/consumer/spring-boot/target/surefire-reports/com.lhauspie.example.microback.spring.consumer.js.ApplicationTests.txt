@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.lhauspie.example.microback.spring.consumer.js.ApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.041 s -- in com.lhauspie.example.microback.spring.consumer.js.ApplicationTests
