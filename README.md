@@ -187,7 +187,7 @@ Que devrait-il se passer si la Business Logic dysfonctionnait ?
 Faudrait-il que je sois informé de manière automatique ?
 Faudrait-il qu'on affiche simplement des logs d'erreurs et attendre que le problème nous soit remonté par le Consumer ?
 
-Une chose est sur, il faut trouver quelque chose, sinon on sera complètement à l'aveugle.
+Une chose est sûr, il faut trouver quelque chose, sinon on sera complètement à l'aveugle.
 
 
 ##
